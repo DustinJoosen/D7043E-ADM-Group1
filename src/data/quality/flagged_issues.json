@@ -1,0 +1,14 @@
+[
+  {
+    "record_id":"103",
+    "issues":"channel 1 (V2): 0.048% of samples exceed 5.0mV"
+  },
+  {
+    "record_id":"116",
+    "issues":"channel 0 (MLII): 0.150% of samples exceed 5.0mV"
+  },
+  {
+    "record_id":"223",
+    "issues":"channel 1 (V1): 0.130% of samples exceed 5.0mV"
+  }
+]

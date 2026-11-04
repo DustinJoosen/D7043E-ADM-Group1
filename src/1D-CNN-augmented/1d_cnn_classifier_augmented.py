@@ -173,7 +173,7 @@ for epoch in range(epochs):
     print(f"Epoch {epoch+1:02d}/{epochs} | Loss Training: {epoch_loss:.4f} | LR: {current_lr:.6f}")
 
 
-# %% Evaluation and Metrics
+# %% Evaluation on Validation and Metrics
 model.eval()
 all_preds, all_targets = [], []
 
@@ -192,4 +192,48 @@ print(confusion_matrix(all_targets, all_preds))
 
 print("\nClassification Report:")
 print(classification_report(all_targets, all_preds, target_names=target_names))
+
+
+# %% Final Evaluation on Test Set (DS2)
+test_npz_path = ROOT_DIR / "src" / "data_augmented" / "test.npz"
+print(f"Loading test.npz : {test_npz_path}")
+
+# Load the test dataset (DS2)
+test_dataset = ECG_RR_Dataset(test_npz_path, label_map)
+test_loader = DataLoader(test_dataset, batch_size=128, shuffle=False)
+
+# Evaluate the model on the test set
+model.eval()
+test_preds, test_targets = [], []
+
+with torch.no_grad():
+    for x_sig, x_rr, targets in test_loader:
+        x_sig, x_rr = x_sig.to(device), x_rr.to(device)
+        outputs = model(x_sig, x_rr)
+        preds = torch.argmax(outputs, dim=1)
+        test_preds.extend(preds.cpu().numpy())
+        test_targets.extend(targets.numpy())
+
+# Compute macro metrics
+test_cm = confusion_matrix(test_targets, test_preds)
+report_dict = classification_report(
+    test_targets, test_preds, target_names=target_names, output_dict=True
+)
+
+test_acc = (np.array(test_preds) == np.array(test_targets)).mean()
+macro_f1 = report_dict["macro avg"]["f1-score"]
+
+print("\n" + "=" * 50)
+print("FINAL TEST RESULTS (DS2)")
+print("=" * 50)
+print(f"Overall Accuracy : {test_acc:.4f}")
+print(f"Macro F1-Score   : {macro_f1:.4f}")
+
+print("\nTest Confusion Matrix:")
+print(test_cm)
+
+print("\nTest Classification Report:")
+print(classification_report(test_targets, test_preds, target_names=target_names))
+
+
 # %%

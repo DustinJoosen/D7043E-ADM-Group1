@@ -1,0 +1,4 @@
+.venv
+.vscode
+mit-bih-arrhythmia-database-1.0.0
+src/data_augmented/*.npz

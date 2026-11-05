@@ -9,6 +9,11 @@ import torch.optim as optim
 from sklearn.metrics import classification_report, confusion_matrix
 from torch.utils.data import DataLoader, Dataset, WeightedRandomSampler
 
+# Fixed seed so training (weighted sampling, noise, weight init) is reproducible
+SEED = 42
+np.random.seed(SEED)
+torch.manual_seed(SEED)
+
 # Dynamic determination of the project's true root
 CWD = Path.cwd()
 ROOT_DIR = CWD
@@ -234,6 +239,18 @@ print(test_cm)
 
 print("\nTest Classification Report:")
 print(classification_report(test_targets, test_preds, target_names=target_names))
+
+
+# %% Save the trained model and its predictions (used by the model comparison in EDA.ipynb)
+save_dir = ROOT_DIR / "src" / "1D-CNN-augmented"
+torch.save({"seed": SEED, "epochs": epochs, "state_dict": model.state_dict()},
+           save_dir / "1d_cnn_classifier_augmented.pt")
+np.savez(save_dir / "1d_cnn_predictions.npz",
+         val_pred=np.array(all_preds), val_true=np.array(all_targets),
+         test_pred=np.array(test_preds), test_true=np.array(test_targets),
+         test_record_id=np.load(test_npz_path)["record_id"],
+         classes=np.array(target_names))
+print(f"Saved model and predictions to: {save_dir}")
 
 
 # %%

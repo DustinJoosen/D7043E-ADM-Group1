@@ -1,0 +1,9 @@
+Dimension,Target Criterion (Sec 1.4),Achieved Result (DS2),Status
+Predictive Performance (Global),Macro F1 >= 80% on unseen DS2 patients & beat baselines,Macro F1 = 49.80% (Acc = 81.51%); beats RF (47.0%) & Dense NN (35.0%),Partially Met (Beats baselines; 80% ceiling limited by S/F)
+Minority-Class Performance (V),High sensitivity (Recall >= 90% target) on critical ventricular beats,"Class V F1 = 89.1%, Recall = 92.1%",Substantially Met (Strong inter-patient V detection)
+Minority-Class Performance (S & F),Avoid collapse on rare S (2.8%) and F (0.8%) classes,Class S F1 = 19.2% (Recall = 22.4%); Class F F1 = 1.6% (Recall = 11.1%),Partially Met for S (3.4x over Dense NN); Not Met for F
+Noise Robustness (Moderate: 12 dB),Macro F1 drop <= 10 percentage points at 12 dB SNR,Macro-F1=0.510 (drop -1.22 pts),Met
+Noise Robustness (Severe: 0 dB),Macro F1 > 25% (above random/trivial baseline) at 0 dB SNR,Macro-F1=0.459 (> 0.25 floor),Met
+Model Complexity (Memory Size),"Final model size strictly < 2 MB (2,048 KB)","19,188 params -> 74.95 KB (FP32) and 20.19 KB (INT8)",Fully Met (~100x below hardware limit)
+INT8 Quantization Tolerance,Macro F1 & Recall degradation <= 5% from FP32 to INT8,"Macro F1 drop = 0.04% (PTQ: 49.76% vs FP32: 49.80%, 99.26% agreement)",Fully Met (Zero performance loss)
+MAX78002 Hardware Compatibility,"Use only MAX78002-supported CNN primitives (Conv1d, ReLU, Pool, Linear)",No BatchNorm/LSTM/Transformer used; fixed-window Conv1D + MLP fusion,Fully Met (Note: replace AdaptiveAvgPool1d(4) with fixed Pool in ai8x)

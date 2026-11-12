@@ -1,0 +1,19 @@
+[project]
+name = "d7043e-adm-group1"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "TitouanBrchd", email = "titouanbrochard11@gmail.com" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "torch>=2.15.0",
+]
+
+[project.scripts]
+d7043e-adm-group1 = "d7043e_adm_group1:main"
+
+[build-system]
+requires = ["uv_build>=0.12.21,<0.13.0"]
+build-backend = "uv_build"

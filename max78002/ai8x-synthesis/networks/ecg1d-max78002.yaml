@@ -1,0 +1,38 @@
+---
+arch: ecg1dmax78002
+dataset: ECG
+layers:
+  - pad: 1
+    activate: ReLU
+    out_offset: 0x2000
+    processors: 0x1
+    output_processors: 0xffff
+    data_format: HWC
+    operation: Conv1d
+    kernel_size: 3
+
+  - max_pool: 2
+    pool_stride: 2
+    pad: 0
+    activate: ReLU
+    out_offset: 0x0000
+    processors: 0xffff
+    output_processors: 0xffffffff
+    operation: Conv1d
+    kernel_size: 3
+
+  - max_pool: 2
+    pool_stride: 2
+    pad: 0
+    activate: ReLU
+    out_offset: 0x2000
+    processors: 0xffffffff
+    operation: Conv1d
+    kernel_size: 3
+
+  - flatten: true
+    out_offset: 0x0000
+    processors: 0xffff
+    operation: MLP
+    output_width: 8
+    activate: None
